@@ -20,12 +20,11 @@ import com.latam.JPAcrud.modelo.Usuario;
 		}
 
 		
-		//	MMMMMMétodo desactivado para no ingresar datos cada vez que se reinicie la aplicación		
+		//	Método desactivado para no ingresar datos cada vez que se reinicie la aplicación		
 //		@Bean
 //		public CommandLineRunner demo(UsuarioRepository repo) {
 //			return (args) -> {
-//				// agregamos dos usuarios //PRUEBA PARA GIT
-		//PRUEBA PARA GIT
+//				// agregamos dos usuarios
 //				repo.save(new Usuario(null, "usuario 3", "clave 1", 12345, "k"));
 //				repo.save(new Usuario(null, "usuario 2", "clave 2", 54321, "9"));
 //				
