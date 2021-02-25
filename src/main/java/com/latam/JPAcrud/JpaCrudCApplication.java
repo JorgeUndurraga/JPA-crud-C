@@ -24,7 +24,7 @@ import com.latam.JPAcrud.modelo.Usuario;
 //		@Bean
 //		public CommandLineRunner demo(UsuarioRepository repo) {
 //			return (args) -> {
-//				// agregamos dos usuarios
+//				// agregamos dos usuarios //Este cambio es para probar git
 //				repo.save(new Usuario(null, "usuario 3", "clave 1", 12345, "k"));
 //				repo.save(new Usuario(null, "usuario 2", "clave 2", 54321, "9"));
 //				
