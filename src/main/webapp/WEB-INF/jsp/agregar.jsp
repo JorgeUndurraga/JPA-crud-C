@@ -24,6 +24,15 @@
 				</button>
 			</div>
 		</c:if>
+		<ul class="pagination pagination-lg justify-content-center">
+			<c:forEach items="${paginas}" var="pagina">
+				<li class="page-item ${paginaActual == pagina ? 'disabled' : ''}">
+					<a class="page-link" href="home? p=${pagina}" tabindex="-1">${pagina}</a>
+				</li>
+			</c:forEach>
+		</ul>
+
+
 		<form action="agregar" method="post">
 			<table>
 				<tr>

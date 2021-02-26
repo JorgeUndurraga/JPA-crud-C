@@ -6,6 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import com.latam.JPAcrud.JpaCrudCApplication;
 import com.latam.JPAcrud.dao.UsuarioRepository;
 import com.latam.JPAcrud.modelo.Usuario;
 import com.latam.JPAcrud.servicio.UsuarioService;
+import com.latam.JPAcrud.vo.NumberVO;
 import com.latam.JPAcrud.vo.UsuarioVO;
 
 @Service
@@ -129,7 +133,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return respuesta;
 
 	}
-
+	
+////////////////////////////////////////////////////////////////////
+	
 	@Override
 	@Transactional
 	public UsuarioVO delete(Usuario usuario) {
@@ -146,6 +152,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return respuesta;
 
 	}
+	
+////////////////////////////////////////////////////////////////////
 
 	@Override
 	@Transactional(readOnly = true)
@@ -164,5 +172,54 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return respuesta;
 
 	}
+	
+//////////////////////////METODOS DE PAGINACIÓN////////////////////////////////
+
+
+	@Override
+	@Transactional(readOnly = true)
+	public UsuarioVO getPage(Integer pagina, Integer cantidad) {
+		
+		respuesta = new UsuarioVO("Ha ocurrido un error", "108", new ArrayList<Usuario>());
+		try {
+			Pageable pageable = PageRequest.of(pagina,cantidad);
+			Page<Usuario> responsePage = dao.findAll(pageable);
+			respuesta.setUsuarios(responsePage.getContent());
+			respuesta.setMensaje(String.format("Se ha/n encontrado %d registro/s",
+			respuesta.getUsuarios().size()));
+			respuesta.setCodigo("0");
+			
+		} catch (Exception e) {
+			log.trace("Usuario Service: Error en getPage", e);
+		}
+		
+	return respuesta;
+	}
+	
+
+	@Override
+	@Transactional(readOnly = true)
+	public NumberVO getPageCount(long registrosPorPagina) {
+		NumberVO respuesta = new NumberVO(0, "Ha ocurrido un error", "109" );
+		
+		try {
+			long registros = dao.count();
+			if(registrosPorPagina == 0 && registros == 0) {
+			respuesta.setValor(1);
+			
+		}else {
+		respuesta.setValor((registros/registrosPorPagina) + (registros % registrosPorPagina == 0 ? 0 : 1));
+		}
+			
+		respuesta.setCodigo("201");
+		respuesta.setMensaje(String.format("Hay %d paginas", respuesta.getValor()));
+		
+		} catch (Exception e) {
+		log.trace("Usuario Service: Error en getPageCount", e);
+		}
+		
+	return respuesta;
+	}
+
 
 }

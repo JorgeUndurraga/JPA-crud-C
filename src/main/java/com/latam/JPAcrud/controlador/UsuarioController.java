@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.latam.JPAcrud.modelo.Usuario;
 import com.latam.JPAcrud.servicio.SecurityService;
 import com.latam.JPAcrud.servicio.UsuarioService;
+import com.latam.JPAcrud.util.Util;
 import com.latam.JPAcrud.vo.UsuarioVO;
 
 public class UsuarioController {
@@ -29,15 +30,26 @@ public class UsuarioController {
 	
 //	Las solicitudes de la página principal
 	@GetMapping({ "/", "/home" })
-	public String home(Model model) {
+	public String home(Model model, @RequestParam(defaultValue = "1") Integer p) {
+		
 		if(!secSvc.isLoggedIn()) return "redirect:/login"; // agregado luego de crear Security Controller
-		model.addAttribute("VO", svc.getAllUsuarios());
+
+				
+		
+				model.addAttribute("usuarioConectado", String.format("Conectado como %s", secSvc.getUsuarioConectado().getNombre()));
+				
+				//model.addAttribute("paginas", Util.getArregloPaginas(1, p));
+				model.addAttribute("paginaActual", p);
+				model.addAttribute("VO", svc.getPage(p-1, 6));
+
+		//model.addAttribute("VO", svc.getAllUsuarios());
 	
 	return "home";
 	}
 	
-	
-//	Abre el formulario de edición cargando los datos del usuario	
+
+
+	//	Abre el formulario de edición cargando los datos del usuario	
 	@GetMapping("/editarForm")
 	public ModelAndView editarForm(Model model, @RequestParam String idUsuario, RedirectAttributes ra) {
 		UsuarioVO respuestaServicio = new UsuarioVO();
