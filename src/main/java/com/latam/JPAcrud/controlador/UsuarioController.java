@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.latam.JPAcrud.modelo.Usuario;
+import com.latam.JPAcrud.servicio.SecurityService;
 import com.latam.JPAcrud.servicio.UsuarioService;
 import com.latam.JPAcrud.vo.UsuarioVO;
 
@@ -21,11 +22,15 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioService svc;
+	
+	@Autowired // agregado luego de crear Security Controller
+	private SecurityService secSvc;
 
 	
 //	Las solicitudes de la página principal
 	@GetMapping({ "/", "/home" })
 	public String home(Model model) {
+		if(!secSvc.isLoggedIn()) return "redirect:/login"; // agregado luego de crear Security Controller
 		model.addAttribute("VO", svc.getAllUsuarios());
 	
 	return "home";
@@ -37,6 +42,8 @@ public class UsuarioController {
 	public ModelAndView editarForm(Model model, @RequestParam String idUsuario, RedirectAttributes ra) {
 		UsuarioVO respuestaServicio = new UsuarioVO();
 		
+		if(!secSvc.isLoggedIn()) return new ModelAndView("redirect:/login"); // agregado luego de crear Security Controller
+				
 		respuestaServicio.setMensaje("No se pudo cargar la vista de edición, intente nuevamente.");
 		
 		try {
@@ -62,6 +69,9 @@ public class UsuarioController {
 	// Llama al método del servicio que se encarga de actualizar los datos del usuario en base de datos
 	@PostMapping("/editar")
 	public ModelAndView editar(@ModelAttribute Usuario usuario, RedirectAttributes ra) {
+		
+		if(!secSvc.isLoggedIn()) return new ModelAndView("redirect:/login"); // agregado luego de crear Security Controller
+		
 		UsuarioVO respuestaServicio = svc.update(usuario);
 		
 		ra.addFlashAttribute("mensaje", respuestaServicio.getMensaje());
@@ -78,6 +88,8 @@ public class UsuarioController {
 //	Abre el formulario de creación de usuarios	
 	@GetMapping("/agregarForm")
 	public String agregarForm(Model model) {
+		if(!secSvc.isLoggedIn()) return "redirect:/login"; // agregado luego de crear Security Controller
+
 		return "agregar";
 	}
 
@@ -85,6 +97,8 @@ public class UsuarioController {
 //	Llama al método del servicio que se encarga de crear los datos del usuario en base de datos	
 	@PostMapping("/agregar")
 	public ModelAndView agregarSubmit(@ModelAttribute Usuario usuario, RedirectAttributes ra) {
+		
+		if(!secSvc.isLoggedIn()) return new ModelAndView("redirect:/login"); // agregado luego de crear Security Controller
 		
 		UsuarioVO respuestaServicio = svc.add(usuario);
 		
@@ -101,6 +115,9 @@ public class UsuarioController {
 //	Llama al método del servicio que se encarga de eliminar los datos del usuario en base de datos y redirecciona al home.	
 	@GetMapping("/eliminar")
 	public ModelAndView eliminar(Model model, @RequestParam String idUsuario, RedirectAttributes ra) {
+
+		if(!secSvc.isLoggedIn()) return new ModelAndView("redirect:/login"); // agregado luego de crear Security Controller
+
 		UsuarioVO respuestaServicio = new UsuarioVO();
 		
 		respuestaServicio.setMensaje("No se pudo eliminar al usuario, intente nuevamente.");
