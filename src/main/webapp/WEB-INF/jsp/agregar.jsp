@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@page import="com.latam.JPAcrud.modelo.Usuario"%>
 <%@page import="com.latam.JPAcrud.vo.UsuarioVO"%>
+<%@page import="com.latam.JPAcrud.util.Util"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +25,7 @@
 				</button>
 			</div>
 		</c:if>
+		
 		<ul class="pagination pagination-lg justify-content-center">
 			<c:forEach items="${paginas}" var="pagina">
 				<li class="page-item ${paginaActual == pagina ? 'disabled' : ''}">

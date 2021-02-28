@@ -184,6 +184,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			Pageable pageable = PageRequest.of(pagina,cantidad);
 			Page<Usuario> responsePage = dao.findAll(pageable);
+			
 			respuesta.setUsuarios(responsePage.getContent());
 			respuesta.setMensaje(String.format("Se ha/n encontrado %d registro/s",
 			respuesta.getUsuarios().size()));

@@ -30,7 +30,7 @@ public class UsuarioController {
 	
 //	Las solicitudes de la página principal
 	@GetMapping({ "/", "/home" })
-	public String home(Model model, @RequestParam(defaultValue = "1") Integer p) {
+	public String home(Model model, @RequestParam(name="page", defaultValue = "0") Integer page) {
 		
 		if(!secSvc.isLoggedIn()) return "redirect:/login"; // agregado luego de crear Security Controller
 
@@ -38,15 +38,18 @@ public class UsuarioController {
 		
 				model.addAttribute("usuarioConectado", String.format("Conectado como %s", secSvc.getUsuarioConectado().getNombre()));
 				
-				//model.addAttribute("paginas", Util.getArregloPaginas(1, p));
-				model.addAttribute("paginaActual", p);
-				model.addAttribute("VO", svc.getPage(p-1, 6));
+				model.addAttribute("paginas", getArregloPaginas(page));
+				model.addAttribute("paginaActual", page);
+				model.addAttribute("VO", svc.getPage(page-1, 6));
 
 		//model.addAttribute("VO", svc.getAllUsuarios());
 	
 	return "home";
 	}
 	
+
+
+
 
 
 	//	Abre el formulario de edición cargando los datos del usuario	
